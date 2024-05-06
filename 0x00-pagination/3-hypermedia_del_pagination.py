@@ -33,7 +33,6 @@ class Server:
         """
         if self.__indexed_dataset is None:
             dataset = self.dataset()
-            truncated_dataset = dataset[:1000]
             self.__indexed_dataset = {i: row for i, row in enumerate(dataset)}
         return self.__indexed_dataset
 
@@ -48,6 +47,10 @@ class Server:
 
         if index is None:
             index = 0
+
+        # Adjust index if rows are deleted
+        while index not in indexed_data:
+            index += 1
 
         next_index = min(index + page_size, total_rows)
         page_data = [indexed_data[i] for i in range(index, next_index)]
